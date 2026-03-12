@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import EventCarousel from '../components/EventCarousel';
+import API_BASE_URL from '../config/api';
 
 const Home = () => {
   const [notifications, setNotifications] = useState([]);
@@ -19,7 +20,7 @@ const Home = () => {
 
   const fetchNotifications = async () => {
     try {
-      const res = await axios.get('/api/notifications');
+      const res = await axios.get(`${API_BASE_URL}/api/notifications`);
       setNotifications(res.data.slice(0, 5));
     } catch (err) {
       console.error(err);
@@ -28,7 +29,7 @@ const Home = () => {
 
   const fetchEvents = async () => {
     try {
-      const res = await axios.get('/api/events');
+      const res = await axios.get(`${API_BASE_URL}/api/events`);
       const allEvents = res.data;
       
       // Separate upcoming and current events for carousel
@@ -45,7 +46,7 @@ const Home = () => {
   const fetchLeadership = async () => {
     try {
       console.log('Fetching leadership data...');
-      const res = await axios.get('/api/leadership');
+      const res = await axios.get(`${API_BASE_URL}/api/leadership`);
       console.log('Leadership data received:', res.data);
       const leaders = res.data;
       

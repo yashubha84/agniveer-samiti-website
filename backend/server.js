@@ -19,27 +19,50 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'));
 
-// MongoDB Connection with better error handling
+// Improved MongoDB Connection with retry logic
 const connectDB = async () => {
   try {
     const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/samiti_db';
-    console.log('Attempting MongoDB connection...');
+    console.log('🔄 Attempting MongoDB connection...');
     
     await mongoose.connect(mongoURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
-      socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
+      serverSelectionTimeoutMS: 10000, // 10 seconds
+      socketTimeoutMS: 45000,
+      bufferCommands: false,
+      bufferMaxEntries: 0,
+      maxPoolSize: 10,
+      minPoolSize: 5,
     });
     
     console.log('✅ MongoDB Connected Successfully');
+    
+    // Test the connection by listing collections
+    const collections = await mongoose.connection.db.listCollections().toArray();
+    console.log(`📊 Database has ${collections.length} collections`);
+    
   } catch (err) {
     console.error('❌ MongoDB Connection Error:', err.message);
-    console.log('Retrying connection in 5 seconds...');
+    console.log('🔄 Retrying connection in 5 seconds...');
     setTimeout(connectDB, 5000);
   }
 };
 
+// Handle MongoDB connection events
+mongoose.connection.on('connected', () => {
+  console.log('✅ Mongoose connected to MongoDB');
+});
+
+mongoose.connection.on('error', (err) => {
+  console.error('❌ Mongoose connection error:', err);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.log('⚠️ Mongoose disconnected');
+});
+
+// Connect to MongoDB
 connectDB();
 
 // Routes

@@ -1,32 +1,27 @@
 {
-  "name": "samiti-management",
+  "name": "agniveer-samiti-website",
   "version": "1.0.0",
-  "description": "Full-stack Samiti organization management system",
-  "main": "server.js",
+  "description": "Full-stack website for Akhil Gujarat Agniveer Samiti with separate backend and frontend",
+  "main": "backend/server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
-    "client": "cd client && npm start",
-    "build": "cd client && npm install && npm run build",
-    "heroku-postbuild": "cd client && npm install && npm run build",
-    "deploy:vercel": "vercel --prod",
-    "deploy:heroku": "git push heroku main",
-    "install-client": "cd client && npm install",
-    "build-client": "cd client && npm run build"
-  },
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2",
-    "express-validator": "^7.0.1",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^7.6.3",
-    "multer": "^1.4.5-lts.1",
-    "nodemailer": "^6.9.7",
-    "pdfkit": "^0.13.0"
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "backend": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm start",
+    "start": "cd backend && npm start",
+    "build": "cd frontend && npm run build",
+    "install:backend": "cd backend && npm install",
+    "install:frontend": "cd frontend && npm install",
+    "install:all": "npm run install:backend && npm run install:frontend",
+    "seed:all": "cd backend && npm run seed:all"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
-  }
+    "concurrently": "^8.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yashubha84/agniveer-samiti-website.git"
+  },
+  "keywords": ["agniveer", "samiti", "gujarat", "management", "fullstack"],
+  "author": "Yashpalsinh V Gohil",
+  "license": "MIT"
 }

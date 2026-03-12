@@ -2,6 +2,31 @@
 
 A comprehensive full-stack web application for managing the Akhil Gujarat Agniveer Samiti organization, built with Node.js, Express, React, and MongoDB.
 
+## 🏗️ **Project Structure**
+
+```
+agniveer-samiti-website/
+├── backend/                # Node.js/Express API
+│   ├── models/            # MongoDB models
+│   ├── routes/            # API routes
+│   ├── middleware/        # Custom middleware
+│   ├── scripts/           # Database seeding scripts
+│   ├── utils/             # Utility functions
+│   ├── server.js          # Main server file
+│   ├── package.json       # Backend dependencies
+│   └── .env               # Environment variables
+├── frontend/              # React application
+│   ├── public/            # Static files
+│   ├── src/
+│   │   ├── components/    # Reusable components
+│   │   ├── pages/         # Page components
+│   │   ├── config/        # API configuration
+│   │   └── App.js
+│   └── package.json       # Frontend dependencies
+├── package.json           # Root package.json for scripts
+└── README.md
+```
+
 ## 🌟 Features
 
 ### 🏠 **Public Features**
@@ -35,7 +60,7 @@ A comprehensive full-stack web application for managing the Akhil Gujarat Agnive
 ### **Backend**
 - **Node.js** - Runtime environment
 - **Express.js** - Web framework
-- **MongoDB** - Database
+- **MongoDB** - Database with improved connection handling
 - **Mongoose** - ODM for MongoDB
 - **JWT** - Authentication
 - **PDFKit** - PDF generation
@@ -45,7 +70,7 @@ A comprehensive full-stack web application for managing the Akhil Gujarat Agnive
 ### **Frontend**
 - **React** - UI library
 - **React Router** - Navigation
-- **Axios** - HTTP client
+- **Axios** - HTTP client with API base URL configuration
 - **CSS3** - Styling with responsive design
 
 ## 🚀 **Quick Setup**
@@ -58,102 +83,116 @@ cd agniveer-samiti-website
 
 ### **2. Install Dependencies**
 ```bash
-# Install server dependencies
+# Install root dependencies (for development scripts)
 npm install
 
-# Install client dependencies
-cd client
-npm install
-cd ..
+# Install backend dependencies
+npm run install:backend
+
+# Install frontend dependencies
+npm run install:frontend
+
+# Or install all at once
+npm run install:all
 ```
 
-### **3. Environment Setup**
-Create a `.env` file in the root directory:
-```env
+### **3. Backend Setup**
+```bash
+# Navigate to backend
+cd backend
+
+# Create .env file with:
 MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/samiti_db
 JWT_SECRET=your_jwt_secret_key
 EMAIL_USER=your_email@gmail.com
 EMAIL_PASS=your_app_password
 NODE_ENV=development
 PORT=5000
+
+# Seed database
+npm run seed:all
 ```
 
-### **4. Database Setup**
+### **4. Frontend Setup**
 ```bash
-# Seed Gujarat districts
-node scripts/seedGujaratDistricts.js
-
-# Create admin user
-node scripts/createAdmin.js
-
-# Seed leadership data
-node scripts/seedLeadership.js
+# Update API base URL in frontend/src/config/api.js
+# For development: http://localhost:5000
+# For production: your deployed backend URL
 ```
 
 ### **5. Run Application**
 ```bash
-# Development mode
+# Development mode (runs both backend and frontend)
 npm run dev
 
 # Or run separately:
-npm start          # Server only
-cd client && npm start  # Client only
+npm run backend    # Backend only (port 5000)
+npm run frontend   # Frontend only (port 3000)
 ```
 
-## 🌐 **Live Deployment**
+## 🔧 **MongoDB Connection Fix**
 
-### **Option 1: Railway (Recommended)**
-1. Go to https://railway.app
-2. Sign up with GitHub
-3. Deploy from GitHub repo: `yashubha84/agniveer-samiti-website`
-4. Add environment variables:
-   ```
-   MONGODB_URI=your_mongodb_connection_string
-   JWT_SECRET=your_jwt_secret
-   NODE_ENV=production
-   PORT=5000
-   ```
-5. Deploy automatically
+### **Issue**: MongoDB Atlas Connection Failing
+The connection might fail due to:
+1. **Cluster paused** (MongoDB Atlas free tier)
+2. **Network restrictions**
+3. **Incorrect connection string**
 
-### **Option 2: Vercel**
-1. Go to https://vercel.com
-2. Import GitHub repository
-3. Configure:
-   - Framework: Other
-   - Build Command: `npm run build`
-   - Output Directory: `client/build`
-   - Install Command: `npm install && cd client && npm install`
-4. Add same environment variables
-5. Deploy
+### **Solutions**:
 
-### **Option 3: Heroku**
+#### **Option 1: Resume MongoDB Atlas Cluster**
+1. Go to https://cloud.mongodb.com
+2. Login to your account
+3. Check if cluster is paused
+4. Click "Resume" if paused
+
+#### **Option 2: Update Connection String**
+```env
+# Try this format in backend/.env
+MONGODB_URI=mongodb+srv://yashpalsinhgohil8427_db_user:cnvaClxNsHAQ7Cpn@cluster0.teo1cp8.mongodb.net/samiti_db?retryWrites=true&w=majority&appName=Cluster0
+```
+
+#### **Option 3: Use Local MongoDB**
 ```bash
-# Install Heroku CLI
-heroku login
-heroku create agniveer-samiti-website
+# Install MongoDB locally
+# Then use:
+MONGODB_URI=mongodb://localhost:27017/samiti_db
+```
+
+#### **Option 4: Create New MongoDB Atlas Cluster**
+1. Create new free cluster at https://mongodb.com/atlas
+2. Create database user
+3. Whitelist all IPs (0.0.0.0/0)
+4. Get new connection string
+5. Update backend/.env
+
+## 🌐 **Deployment**
+
+### **Backend Deployment (Railway/Heroku)**
+```bash
+# Deploy backend to Railway
+1. Go to https://railway.app
+2. Deploy backend folder
+3. Add environment variables
+4. Get backend URL
+
+# Deploy backend to Heroku
+heroku create agniveer-backend
 heroku config:set MONGODB_URI=your_connection_string
 heroku config:set JWT_SECRET=your_secret
-heroku config:set NODE_ENV=production
-git push heroku main
+git subtree push --prefix backend heroku main
 ```
 
-## 🗄️ **MongoDB Atlas Setup**
-
-### **Create Database**
-1. Go to https://mongodb.com/atlas
-2. Create free account and cluster
-3. Create database user
-4. Whitelist all IPs (0.0.0.0/0)
-5. Get connection string
-6. Replace in environment variables
-
-### **Seed Database (After Deployment)**
-Run these commands locally with production MongoDB URI:
+### **Frontend Deployment (Vercel/Netlify)**
 ```bash
-node scripts/seedGujaratDistricts.js
-node scripts/createAdmin.js
-node scripts/seedLeadership.js
+# Update frontend/src/config/api.js with backend URL
+# Deploy frontend folder to Vercel or Netlify
 ```
+
+### **Full-Stack Deployment Options**
+1. **Railway**: Deploy both backend and frontend separately
+2. **Heroku**: Use git subtree for backend, Netlify for frontend
+3. **DigitalOcean**: Deploy as separate services
 
 ## 🔐 **Login Credentials**
 
@@ -165,67 +204,45 @@ node scripts/seedLeadership.js
 - Each district has unique login credentials
 - Format: District-specific usernames and passwords
 
-## 🎯 **Key Features**
+## 🎯 **Key Improvements**
 
-### **Dynamic Leadership System**
-- Database-driven president/VP information
-- Admin panel for leadership management
-- Automatic updates across the website
+### **Separated Architecture**
+- ✅ **Backend**: Independent API server
+- ✅ **Frontend**: Standalone React app
+- ✅ **Better Scalability**: Can deploy separately
+- ✅ **Improved Development**: Work on frontend/backend independently
 
-### **Unique ID System**
-- Member IDs: `AG-{districtCode}-M-{number}`
-- Volunteer IDs: `AG-{districtCode}-V-{number}`
+### **Enhanced MongoDB Connection**
+- ✅ **Retry Logic**: Automatic reconnection attempts
+- ✅ **Better Error Handling**: Detailed connection status
+- ✅ **Connection Monitoring**: Event listeners for connection status
+- ✅ **Optimized Settings**: Improved connection pool and timeouts
 
-### **Professional Reports**
-- PDF generation with letterhead
-- Dynamic pagination based on data
-- District-wise and consolidated reports
+### **API Configuration**
+- ✅ **Environment-based URLs**: Different URLs for dev/production
+- ✅ **Centralized Config**: Single file for API endpoints
+- ✅ **Easy Deployment**: Simple URL updates for deployment
 
-### **Event Management**
-- Photo galleries with multiple images
-- Event creation and management
-- District-specific events
+## 🔧 **Development Scripts**
 
-## 🔧 **Common Issues & Fixes**
+```bash
+# Root level commands
+npm run dev              # Run both backend and frontend
+npm run backend          # Run backend only
+npm run frontend         # Run frontend only
+npm run install:all      # Install all dependencies
+npm run build           # Build frontend for production
 
-### **MongoDB Connection Issues**
-- Ensure MongoDB Atlas cluster is not paused
-- Check connection string format
-- Verify network access (whitelist 0.0.0.0/0)
+# Backend commands (from backend folder)
+npm run dev             # Run with nodemon
+npm run seed:all        # Seed all data
+npm run seed:districts  # Seed districts only
+npm run seed:admin      # Create admin user
+npm run seed:leadership # Seed leadership data
 
-### **Build Errors**
-- Ensure `react-scripts` is in dependencies (not devDependencies)
-- Use correct build commands for deployment platform
-- Check Node.js version compatibility
-
-### **Environment Variables**
-- Double-check variable names (case-sensitive)
-- Ensure all required variables are set
-- Use production MongoDB URI for deployment
-
-### **CORS Errors**
-- Server is configured for production domains
-- Update CORS origins if using custom domain
-
-## 📁 **Project Structure**
-
-```
-agniveer-samiti-website/
-├── client/                 # React frontend
-│   ├── public/            # Static files
-│   ├── src/
-│   │   ├── components/    # Reusable components
-│   │   ├── pages/        # Page components
-│   │   └── App.js
-│   └── package.json
-├── models/                # MongoDB models
-├── routes/                # API routes
-├── middleware/            # Custom middleware
-├── scripts/               # Database seeding scripts
-├── utils/                 # Utility functions
-├── server.js              # Main server file
-├── package.json
-└── README.md
+# Frontend commands (from frontend folder)
+npm start              # Development server
+npm run build          # Production build
 ```
 
 ## 🌟 **Live Website Features**
@@ -238,6 +255,7 @@ Once deployed, your website will have:
 - ✅ Professional PDF report generation
 - ✅ Responsive design for all devices
 - ✅ Secure authentication system
+- ✅ Improved database connectivity
 
 ## 🤝 **Contributing**
 
