@@ -10,7 +10,9 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'],
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://agniveer-samiti-website.vercel.app', 'https://agniveer-samiti-website-production.up.railway.app']
+    : ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'],
   credentials: true
 }));
 app.use(express.json());

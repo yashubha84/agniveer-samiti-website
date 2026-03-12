@@ -7,10 +7,12 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "client": "cd client && npm start",
-    "build": "cd client && npm run build",
+    "build": "cd client && npm install && npm run build",
     "heroku-postbuild": "cd client && npm install && npm run build",
     "deploy:vercel": "vercel --prod",
-    "deploy:heroku": "git push heroku main"
+    "deploy:heroku": "git push heroku main",
+    "install-client": "cd client && npm install",
+    "build-client": "cd client && npm run build"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
