@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/agniveer-samiti-website/static/css/main.f1f8f3dc.css",
+    "main.js": "/agniveer-samiti-website/static/js/main.7e5e7b13.js",
+    "index.html": "/agniveer-samiti-website/index.html",
+    "main.f1f8f3dc.css.map": "/agniveer-samiti-website/static/css/main.f1f8f3dc.css.map",
+    "main.7e5e7b13.js.map": "/agniveer-samiti-website/static/js/main.7e5e7b13.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f1f8f3dc.css",
+    "static/js/main.7e5e7b13.js"
+  ]
+}
